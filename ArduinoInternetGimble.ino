@@ -3,9 +3,11 @@
 #include <Servo.h> 
 
 int led = 4;
-Servo myservo; 
+Servo panServo; 
+Servo tiltServo;
+int panPos = 0; 
+int tiltPos=0;
 
-int pos = 0; 
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };   //physical mac address
 byte ip[] = { 192, 168, 1, 178 };                      // ip in lan (that's what you need to use in your browser. ("192.168.1.178")
 byte gateway[] = { 192, 168, 1, 1 };                   // internet access via router
@@ -28,7 +30,8 @@ void setup() {
   Serial.println(Ethernet.localIP());
   
   pinMode(led, OUTPUT);
-  myservo.attach(9);
+  panServo.attach(9);
+  tiltServo.attach(8);
 }
 
 
@@ -59,21 +62,20 @@ void loop() {
            client.println("<meta name='apple-mobile-web-app-capable' content='yes' />");
            client.println("<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />");
            client.println("<link rel='stylesheet' type='text/css' href='http://randomnerdtutorials.com/ethernetcss.css' />");
-           client.println("<TITLE>Random Nerd Tutorials Project</TITLE>");
+           client.println("<TITLE>Dixie's Camera</TITLE>");
            client.println("</HEAD>");
            client.println("<BODY>");
-           client.println("<H1>Random Nerd Tutorials Project</H1>");
+           client.println("<H1>Control the Gremlin's Gimble</H1>");
            client.println("<hr />");
            client.println("<br />");  
-           client.println("<H2>Arduino with Ethernet Shield</H2>");
+           client.println("<H2>Fall 2019: A Christmas Carol</H2>");
            client.println("<br />");  
-           client.println("<a href=\"/?button1on\"\">Turn On LED</a>");
-           client.println("<a href=\"/?button1off\"\">Turn Off LED</a><br />");   
+           client.println("<a href=\"/?button1on\"\">Rotate Left</a>");
+           client.println("<a href=\"/?button1off\"\">Rotate Right</a><br />");   
            client.println("<br />");     
            client.println("<br />"); 
-           client.println("<a href=\"/?button2on\"\">Rotate Left</a>");
-           client.println("<a href=\"/?button2off\"\">Rotate Right</a><br />"); 
-           client.println("<p>Created by Rui Santos. Visit http://randomnerdtutorials.com for more projects!</p>");  
+           client.println("<a href=\"/?button2on\"\">Pan Left</a>");
+           client.println("<a href=\"/?button2off\"\">Pan Right</a><br />"); 
            client.println("<br />"); 
            client.println("</BODY>");
            client.println("</HTML>");
@@ -83,22 +85,30 @@ void loop() {
            client.stop();
            //controls the Arduino if you press the buttons
            if (readString.indexOf("?button1on") >0){
-               digitalWrite(led, HIGH);
+               for(tiltPos = 0; tiltPos < 180; tiltPos += 3)  // goes from 0 degrees to 180 degrees 
+                {                                  // in steps of 1 degree 
+                  tiltServo.write(tiltPos);              // tell servo to go to position in variable 'pos' 
+                  delay(15);                       // waits 15ms for the servo to reach the position 
+                } 
            }
            if (readString.indexOf("?button1off") >0){
-               digitalWrite(led, LOW);
+               for(tiltPos = 0; tiltPos < 180; tiltPos += 3)  // goes from 0 degrees to 180 degrees 
+                {                                  // in steps of 1 degree 
+                  tiltServo.write(tiltPos);              // tell servo to go to position in variable 'pos' 
+                  delay(15);                       // waits 15ms for the servo to reach the position 
+                } 
            }
            if (readString.indexOf("?button2on") >0){
-                for(pos = 0; pos < 180; pos += 3)  // goes from 0 degrees to 180 degrees 
+                for(panPos = 0; panPos < 180; panPos += 3)  // goes from 0 degrees to 180 degrees 
                 {                                  // in steps of 1 degree 
-                  myservo.write(pos);              // tell servo to go to position in variable 'pos' 
+                  panServo.write(panPos);              // tell servo to go to position in variable 'pos' 
                   delay(15);                       // waits 15ms for the servo to reach the position 
                 } 
            }
            if (readString.indexOf("?button2off") >0){
-                for(pos = 180; pos>=1; pos-=3)     // goes from 180 degrees to 0 degrees 
+                for(panPos = 180; panPos>=1; panPos-=3)     // goes from 180 degrees to 0 degrees 
                 {                                
-                  myservo.write(pos);              // tell servo to go to position in variable 'pos' 
+                  panServo.write(panPos);              // tell servo to go to position in variable 'pos' 
                   delay(15);                       // waits 15ms for the servo to reach the position 
                 } 
            }
