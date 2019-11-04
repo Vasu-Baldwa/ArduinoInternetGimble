@@ -61,7 +61,7 @@ void loop() {
            client.println("<HEAD>");
            client.println("<meta name='apple-mobile-web-app-capable' content='yes' />");
            client.println("<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent' />");
-           client.println("<link rel='stylesheet' type='text/css' href='http://randomnerdtutorials.com/ethernetcss.css' />");
+           client.println("<link rel='stylesheet' type='text/css' href='https://github.com/Vasu-Baldwa/ArduinoInternetGimble/blob/master/GremlinsGimble.css' />");
            client.println("<TITLE>Dixie's Camera</TITLE>");
            client.println("</HEAD>");
            client.println("<BODY>");
